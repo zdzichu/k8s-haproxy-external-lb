@@ -1,0 +1,4 @@
+[inhosts]
+delta.pipebreaker.pl		haproxy_bind=ipv6@:443
+epsilon.pipebreaker.pl		haproxy_bind=ipv6@:443
+taugw-legacy.pipebreaker.pl	haproxy_bind=ipv4@:443

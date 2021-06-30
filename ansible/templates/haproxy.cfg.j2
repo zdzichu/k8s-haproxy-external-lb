@@ -1,0 +1,30 @@
+#
+# {{ ansible_managed }}
+#
+
+global
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+    # utilize system-wide crypto-policies
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
+
+frontend main
+    mode tcp
+    bind {{ haproxy_bind }}
+    default_backend             tau-traefik-websecure
+
+backend tau-traefik-websecure
+    balance     leastconn
+{% for address in ep_addresses %}
+    server {{ address["targetRef"]["name"] }} {{ address["ip"] }}:{{ websecure_port }} send-proxy
+{% endfor %}
+

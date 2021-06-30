@@ -1,0 +1,40 @@
+---
+- name: Configure HAProxy loadbalancer for k8s tau cluster
+  hosts: inhosts
+
+  tasks:
+  - name: Install HAProxy and k8s packages
+    ansible.builtin.package:
+      name: haproxy
+      state: present
+
+  - name: Get Traefik endpoints
+    community.kubernetes.k8s_info:
+      kind: endpoint
+      namespace: kube-system
+      name: traefik
+    register: traefik_endpoints
+    delegate_to: localhost
+
+      #  - debug:
+      # var: traefik_endpoints
+
+  - name: Generate HAProxy config
+    ansible.builtin.template:
+      src: "haproxy.cfg.j2"
+      dest: "/etc/haproxy/haproxy.cfg"
+    vars:
+      ep_addresses: "{{ traefik_endpoints | community.general.json_query('resources[*].subsets[*].addresses') | first | first }}"
+      websecure_port: "{{ traefik_endpoints | community.general.json_query('resources[*].subsets[*].ports[?name==`websecure`].port') | first | first | first }}"
+    notify:
+      - restore selinux context
+      - restart haproxy
+
+  handlers:
+    - name: restore selinux context
+      shell: restorecon -v /etc/haproxy/haproxy.cfg
+
+    - name: restart haproxy
+      ansible.builtin.service:
+        name: haproxy
+        state: restarted
