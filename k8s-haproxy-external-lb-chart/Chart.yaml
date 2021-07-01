@@ -1,0 +1,9 @@
+apiVersion: v2
+name: pbrk-haproxylb
+description: Configures external haproxy as loadbalancers
+
+type: application
+
+version: 0.1.0
+
+appVersion: "6"

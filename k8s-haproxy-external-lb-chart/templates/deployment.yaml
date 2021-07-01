@@ -1,0 +1,39 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+      annotations:
+        source: ""https://github.com/zdzichu/k8s-haproxy-external-lb"
+    spec:
+      containers:
+      - name: k8s-haproxy-external-lb-watcher
+        image: {{ .Values.image.name }}:{{ .Chart.AppVersion }}
+        env:
+          - name: ANSIBLE_LOCAL_TEMP
+            value: "/tmp"
+          - name: ANSIBLE_HOST_KEY_CHECKING
+            value: "False"
+        resources:
+          requests:
+            cpu: 1m
+            memory: 10Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        volumeMounts:
+          - name: ssh-key
+            mountPath: "/ssh"
+      volumes:
+        - name: ssh-key
+          secret:
+            secretName: haproxy-agent

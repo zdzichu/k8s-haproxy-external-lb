@@ -1,0 +1,5 @@
+
+# values for PRODUCTION environment
+
+image:
+  name: "registry.example.com/k8s-haproxy-external-lb"
