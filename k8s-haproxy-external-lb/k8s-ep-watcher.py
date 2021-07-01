@@ -22,6 +22,10 @@ k8s_api = client.CoreV1Api()
 
 w = watch.Watch()
 
+# add dummy user until local.py in ansible is fixed
+with open('/etc/passwd', 'a') as file:
+    file.write(f'default:x:{os.getuid()}:0:default user:/tmp:/sbin/nologin')
+
 print(f"Watching endpoints of '{NAME}' in namespace '{NAMESPACE}'…")
 
 for event in w.stream(func=k8s_api.list_namespaced_endpoints,
