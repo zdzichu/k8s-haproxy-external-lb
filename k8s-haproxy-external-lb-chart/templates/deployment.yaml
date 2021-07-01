@@ -23,6 +23,8 @@ spec:
             value: "/tmp"
           - name: ANSIBLE_HOST_KEY_CHECKING
             value: "False"
+          - name: PYTHONUNBUFFERED
+            value: "True"
         resources:
           requests:
             cpu: 1m
