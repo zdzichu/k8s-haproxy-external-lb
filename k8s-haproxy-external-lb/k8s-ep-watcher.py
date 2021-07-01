@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import datetime
 from kubernetes import client, config as kube_config, watch
@@ -7,7 +7,7 @@ import os
 NAMESPACE = "kube-system"
 NAME = "traefik"
 
-ANSIBLE_INVOCATION="ansible-playbook --diff --user=root --inventory /ansible/inventory /ansible/haproxy-configura.yaml"
+ANSIBLE_INVOCATION="ansible-playbook --diff --user=root --key-file=/ssh/ssh_key_agent --inventory /ansible/inventory /ansible/haproxy-configure.yaml"
 
 # open connection to Kubernetes API
 if os.getenv("KUBERNETES_PORT"):

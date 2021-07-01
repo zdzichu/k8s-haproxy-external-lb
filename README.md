@@ -39,3 +39,8 @@ subsets:
 getting above via ansible:
 https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html
 
+
+ssh-keygen -t ed25519 -C "k8s-haproxy-external-lb_agent" -f ssh_key_agent
+kubectl -n kube-system create secret generic haproxy-agent --from-file=ssh_key_agent=ssh_key_agent
+
+
