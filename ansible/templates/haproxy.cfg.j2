@@ -25,6 +25,7 @@ frontend main
 backend tau-traefik-websecure
     balance     leastconn
 {% for address in ep_addresses %}
+    # on {{ address["nodeName"] }}
     server {{ address["targetRef"]["name"] }} {{ address["ip"] }}:{{ websecure_port }} send-proxy
 {% endfor %}
 

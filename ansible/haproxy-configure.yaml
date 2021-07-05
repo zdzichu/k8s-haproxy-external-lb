@@ -3,7 +3,7 @@
   hosts: inhosts
 
   tasks:
-  - name: Install HAProxy and k8s packages
+  - name: Install HAProxy package
     ansible.builtin.package:
       name: haproxy
       state: present
