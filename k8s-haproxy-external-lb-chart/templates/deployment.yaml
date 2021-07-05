@@ -23,6 +23,9 @@ spec:
             value: "/tmp"
           - name: ANSIBLE_HOST_KEY_CHECKING
             value: "False"
+          # PIPELINING does not use temporary files, which helps with 'local' connection in a container
+          - name: ANSIBLE_PIPELINING
+            value: "True"
           - name: PYTHONUNBUFFERED
             value: "True"
         resources:
