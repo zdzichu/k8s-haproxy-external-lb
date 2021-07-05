@@ -23,6 +23,7 @@ k8s_api = client.CoreV1Api()
 w = watch.Watch()
 
 # add dummy user until local.py in ansible is fixed
+# remove when https://github.com/ansible/ansible/pull/75177 is merged & released
 with open('/etc/passwd', 'a') as file:
     file.write(f'default:x:{os.getuid()}:0:default user:/tmp:/sbin/nologin')
 
