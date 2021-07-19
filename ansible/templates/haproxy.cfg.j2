@@ -29,3 +29,17 @@ backend tau-traefik-websecure
     server {{ address["targetRef"]["name"] }} {{ address["ip"] }}:{{ websecure_port }} send-proxy
 {% endfor %}
 
+{% if haproxy_bind_insecure is defined %}
+frontend main_insecure
+    mode tcp
+    bind {{ haproxy_bind_insecure }}
+    default_backend             tau-traefik-insecure
+
+backend tau-traefik-insecure
+    balance     leastconn
+{% for address in ep_addresses %}
+    # on {{ address["nodeName"] }}
+    server {{ address["targetRef"]["name"] }} {{ address["ip"] }}:{{ insecure_port }} send-proxy
+{% endfor %}
+{% endif %}
+

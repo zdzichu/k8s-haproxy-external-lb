@@ -26,6 +26,7 @@
     vars:
       ep_addresses: "{{ traefik_endpoints | community.general.json_query('resources[*].subsets[*].addresses') | first | first }}"
       websecure_port: "{{ traefik_endpoints | community.general.json_query('resources[*].subsets[*].ports[?name==`websecure`].port') | first | first | first }}"
+      insecure_port:  "{{ traefik_endpoints | community.general.json_query('resources[*].subsets[*].ports[?name==`web`].port') | first | first | first }}"
     notify:
       - restore selinux context
       - restart haproxy

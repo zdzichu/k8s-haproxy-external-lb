@@ -43,4 +43,6 @@ https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_inf
 ssh-keygen -t ed25519 -C "k8s-haproxy-external-lb_agent" -f ssh_key_agent
 kubectl -n kube-system create secret generic haproxy-agent --from-file=ssh_key_agent=ssh_key_agent
 
+podman build -t pipebreaker.pl:5000/k8s-haproxy-external-lb:7podman build -t pipebreaker.pl:5000/k8s-haproxy-external-lb:7
+
 
