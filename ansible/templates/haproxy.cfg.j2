@@ -17,6 +17,11 @@ global
     ssl-default-bind-ciphers PROFILE=SYSTEM
     ssl-default-server-ciphers PROFILE=SYSTEM
 
+defaults
+    timeout connect 2s
+    timeout client 1m
+    timeout server 1m
+
 frontend main
     mode tcp
     bind {{ haproxy_bind }}
