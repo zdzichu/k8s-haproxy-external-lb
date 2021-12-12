@@ -8,6 +8,7 @@ RUN dnf install --assumeyes \
 	ansible-collection-community-kubernetes \
 	ansible-collection-community-general \
 	python3-kubernetes \
+	python3-openshift
 	&& dnf clean all
 
 # needed for ansible getuser() workaround
