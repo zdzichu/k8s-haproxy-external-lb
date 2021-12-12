@@ -87,6 +87,7 @@ In k3s, you can edit `helmchart traefik` in namespace `kube-system` and add the 
 spec:
   valuesContent: |-
     additionalArguments:
+      - "--entryPoints.web.proxyProtocol.trustedIPs=198.51.100.1,10.42.0.0/16"
       - "--entryPoints.websecure.proxyProtocol.trustedIPs=198.51.100.1,10.42.0.0/16"
 ```
 
