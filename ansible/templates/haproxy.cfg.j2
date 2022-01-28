@@ -31,7 +31,7 @@ backend tau-traefik-websecure
     balance     leastconn
 {% for address in ep_addresses %}
     # on {{ address["nodeName"] }}
-    server {{ address["targetRef"]["name"] }} {{ address["ip"] }}:{{ websecure_port }} send-proxy
+    server {{ address["targetRef"]["name"] }} {{ address["ip"] }}:{{ websecure_port }} send-proxy-v2
 {% endfor %}
 
 {% if haproxy_bind_insecure is defined %}
@@ -44,7 +44,7 @@ backend tau-traefik-insecure
     balance     leastconn
 {% for address in ep_addresses %}
     # on {{ address["nodeName"] }}
-    server {{ address["targetRef"]["name"] }} {{ address["ip"] }}:{{ insecure_port }} send-proxy
+    server {{ address["targetRef"]["name"] }} {{ address["ip"] }}:{{ insecure_port }} send-proxy-v2
 {% endfor %}
 {% endif %}
 
