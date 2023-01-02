@@ -13,13 +13,14 @@ spec:
         name: {{ .Release.Name }}
         app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
       annotations:
-        source: ""https://github.com/zdzichu/k8s-haproxy-external-lb"
+        a8r.io/repository: "https://github.com/zdzichu/k8s-haproxy-external-lb"
     spec:
       containers:
       - name: k8s-haproxy-external-lb-watcher
         image: {{ .Values.image.name }}:{{ .Chart.AppVersion }}
         env:
-          - name: ANSIBLE_LOCAL_TEMP
+          # path used on the controller (i.e. in the pod)
+          - name: ANSIBLE_HOME
             value: "/tmp"
           - name: ANSIBLE_HOST_KEY_CHECKING
             value: "False"

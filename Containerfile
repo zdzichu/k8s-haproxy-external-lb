@@ -1,15 +1,12 @@
-FROM fedora:latest
+FROM fedora-minimal:37
 
-# workaround for running yum in container
-USER root
-
-RUN dnf install --assumeyes \
+RUN microdnf install --assumeyes \
 	ansible \
-	ansible-collection-community-kubernetes \
-	ansible-collection-community-general \
+	ansible-collection-kubernetes-core \
+	python3-paramiko \
 	python3-kubernetes \
-	python3-openshift
-	&& dnf clean all
+	python3-jmespath \
+	&& microdnf clean all
 
 # needed for ansible getuser() workaround
 RUN chmod a+w /etc/passwd
