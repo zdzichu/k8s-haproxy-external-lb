@@ -48,7 +48,7 @@ accessible and no further configuration is needed.
 
 #### Ansible and container image
 
-1. Create an  `ansible/inventory` defining you edge hosts. For each hostname define `haproxy_bind`
+1. Create an `inventory` defining your edge hosts. For each hostname define `haproxy_bind`
    directive, which controls `bind` directive in haproxy config file. For example:
 
   - `haproxy_bind=ipv6@:443` for receiving IPv6 traffic
@@ -58,6 +58,8 @@ accessible and no further configuration is needed.
   There's also `haproxy_bind_insecure` directive for handling non-encrypted traffic on port 80. It's usage
   is discouraged.
 
+  Put the `inventory` in a `ConfigMap` named `haproxy-agent`, in a key `inventory`.
+
 2. Create a pair of SSH keys. Put the public part in `~root/.ssh/authorized_keys` file on edge nodes.
 
   > ssh-keygen -t ed25519 -C "k8s-haproxy-external-lb_agent" -f ssh_key_agent
@@ -66,7 +68,7 @@ accessible and no further configuration is needed.
 
   > kubectl -n kube-system create secret generic haproxy-agent --from-file=ssh_key_agent=ssh_key_agent
 
-3. Pod need to be run with enough permissions to read `EndPoint` resources. Example helm chart
+3. Pod needs to be run with enough permissions to read `EndPoint` resources. Example helm chart
    uses `traefik` service account, which should be already configured on k3s cluster.
 
 4. Build the image:
@@ -81,22 +83,29 @@ accessible and no further configuration is needed.
 To parse information provided by PROXY protocol, Traefik needs configuration. This is done
 using `proxyProtocol.trustedIPs` setting [for entrypoints](https://doc.traefik.io/traefik/routing/entrypoints/#proxyprotocol).
 
-In k3s, you can edit `helmchart traefik` in namespace `kube-system` and add the following:
+In k3s, you can create `HelmChartConfig traefik` in namespace `kube-system` and add the following:
 
 ```yaml
 spec:
   valuesContent: |-
-    additionalArguments:
-      - "--entryPoints.web.proxyProtocol.trustedIPs=198.51.100.1,10.42.0.0/16"
-      - "--entryPoints.websecure.proxyProtocol.trustedIPs=198.51.100.1,10.42.0.0/16"
+    ports:
+      web:
+        proxyProtocol:
+          trustedIPs:
+            - "198.51.100.1"
+            - "10.42.0.0/16"
+      websecure:
+        proxyProtocol:
+          trustedIPs:
+            - "198.51.100.1"
+            - "10.42.0.0/16"
 ```
 
-The IP range depends on your network configuration. In example above, 10.42.0.0/16 is Kubernetes pod network (for running IPv6-to-IPv4 haproxies) 
+The IP range depends on your network configuration. In example above, 10.42.0.0/16 is Kubernetes pod network (for running IPv6-to-IPv4 haproxies)
 and 198.51.100.1 is outgoing address for traffic tuneled from external IPv4 edge node.
 
 
 ### Improvement ideas
 
-* Ansible inventory should probably be turned into a `ConfigMap`
 * Configurable `EndPoint`s names, those are hardcoded now for Traefik as shipped with k3s.
 

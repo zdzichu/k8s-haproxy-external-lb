@@ -1,0 +1,9 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}
+data:
+  inventory: |
+{{ .Values.inventory | indent 4 }}
+

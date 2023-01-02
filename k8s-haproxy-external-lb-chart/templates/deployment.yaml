@@ -4,6 +4,7 @@ apiVersion: apps/v1
 metadata:
   name: {{ .Release.Name }}
 spec:
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       name: {{ .Release.Name }}
@@ -39,7 +40,12 @@ spec:
         volumeMounts:
           - name: ssh-key
             mountPath: "/ssh"
+          - name: ansible-config
+            mountPath: "/ansible-config"
       volumes:
         - name: ssh-key
           secret:
             secretName: haproxy-agent
+        - name: ansible-config
+          configMap:
+            name: {{ .Release.Name }}
