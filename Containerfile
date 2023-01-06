@@ -1,4 +1,4 @@
-FROM fedora-minimal:37
+FROM registry.fedoraproject.org/fedora-minimal:37
 
 RUN microdnf install --assumeyes \
 	ansible \
