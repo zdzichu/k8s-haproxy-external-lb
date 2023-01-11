@@ -8,8 +8,8 @@ on:
 
 env:
   # container repository
-  CR_HOST: "repos.pipebreaker.pl"
-  CR_USER: "zdzichu"
+  CR_HOST: ${{ vars.CONTAINER_REPO_HOST }}
+  CR_USER: ${{ vars.CONTAINER_REPO_USER }}
   CR_PASS: ${{ secrets.CONTAINER_REPO_PASS }}
 
 jobs:
