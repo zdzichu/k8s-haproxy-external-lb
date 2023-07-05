@@ -10,14 +10,15 @@
 
   - name: Get Traefik endpoints
     kubernetes.core.k8s_info:
-      kind: endpoint
+      kind: endpoints
       namespace: kube-system
       name: traefik
     register: traefik_endpoints
     delegate_to: localhost
 
-      #  - debug:
-      # var: traefik_endpoints
+#  - name: Show endpoints
+#    ansible.builtin.debug:
+#      var: traefik_endpoints
 
   - name: Generate HAProxy config
     ansible.builtin.template:
