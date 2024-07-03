@@ -24,6 +24,8 @@ spec:
           # path used on the controller (i.e. in the pod)
           - name: ANSIBLE_HOME
             value: "/tmp"
+          - name: ANSIBLE_LOCAL_TEMP
+            value: "/tmp"
           - name: ANSIBLE_HOST_KEY_CHECKING
             value: "False"
           # PIPELINING does not use temporary files, which helps with 'local' connection in a container

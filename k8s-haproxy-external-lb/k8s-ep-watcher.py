@@ -7,7 +7,7 @@ import os
 NAMESPACE = "kube-system"
 NAME = "traefik"
 
-ANSIBLE_INVOCATION="ansible-playbook --diff --user=root --key-file=/ssh/ssh_key_agent --inventory /ansible-config/inventory /ansible/haproxy-configure.yaml"
+ANSIBLE_INVOCATION="ansible-playbook --diff --user=root --connection paramiko --key-file=/ssh/ssh_key_agent --inventory /ansible-config/inventory /ansible/haproxy-configure.yaml"
 
 # open connection to Kubernetes API
 if os.getenv("KUBERNETES_PORT"):
