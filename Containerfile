@@ -1,12 +1,12 @@
 FROM registry.fedoraproject.org/fedora-minimal:41
 
-RUN microdnf install --assumeyes \
+RUN dnf install --assumeyes \
 	ansible \
 	ansible-collection-kubernetes-core \
 	python3-paramiko \
 	python3-kubernetes \
 	python3-jmespath \
-	&& microdnf clean all
+	&& dnf clean all
 
 # needed for ansible getuser() workaround
 RUN chmod a+w /etc/passwd
