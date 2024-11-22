@@ -16,18 +16,42 @@
     register: traefik_endpoints
     delegate_to: localhost
 
-#  - name: Show endpoints
-#    ansible.builtin.debug:
-#      var: traefik_endpoints
+  - name: Extract addresses
+    set_fact:
+      traefik_addresses: >-
+        {{
+          traefik_endpoints.resources[0].subsets[0].addresses
+        }}
+
+  - name: Extract web port
+    set_fact:
+      traefik_insecure_port: >-
+        {{
+          traefik_endpoints.resources[0].subsets[0].ports
+          | selectattr('name', 'equalto', 'web')
+          | map(attribute='port')
+          | first
+        }}
+
+  - name: Extract websecure port
+    # here I want 'websecure' or 'websecure-http3'
+    set_fact:
+      traefik_websecure_port: >-
+        {{
+          traefik_endpoints.resources[0].subsets[0].ports
+          | selectattr('name', 'match', '^websecure')
+          | map(attribute='port')
+          | first
+        }}
 
   - name: Generate HAProxy config
     ansible.builtin.template:
       src: "haproxy.cfg.j2"
       dest: "/etc/haproxy/haproxy.cfg"
     vars:
-      ep_addresses: "{{ traefik_endpoints | community.general.json_query('resources[*].subsets[*].addresses') | first | first }}"
-      websecure_port: "{{ traefik_endpoints | community.general.json_query('resources[*].subsets[*].ports[?name==`websecure`].port') | first | first | first }}"
-      insecure_port:  "{{ traefik_endpoints | community.general.json_query('resources[*].subsets[*].ports[?name==`web`].port') | first | first | first }}"
+      ep_addresses:   "{{ traefik_addresses }}"
+      insecure_port:  "{{ traefik_insecure_port }}"
+      websecure_port: "{{ traefik_websecure_port }}"
     notify:
       - restore selinux context
       - restart haproxy
